@@ -1,6 +1,6 @@
 {
-  "modid": "SaveStateMod",
-  "name": "STS Save State Mod",
+  "modid": "MarisaState",
+  "name": "Marisa State",
   "author_list": ["Board Engineer"],
   "description": "${project.description}",
   "version": "1.0.0",
