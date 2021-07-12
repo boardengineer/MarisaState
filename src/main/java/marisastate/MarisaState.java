@@ -1,13 +1,15 @@
 package marisastate;
 
 import ThMod.ThMod;
-import ThMod.action.ManaConvectionAction;
-import ThMod.action.MeteoricShowerAction;
-import ThMod.action.RefreshHandAction;
-import ThMod.action.ShootingEchoAction;
-import ThMod.cards.Marisa.PropBag;
+import ThMod.abstracts.AmplifiedAttack;
+import ThMod.action.*;
+import ThMod.cards.Marisa.*;
 import ThMod.characters.Marisa;
+import ThMod.potions.BottledSpark;
+import ThMod.potions.ShroomBrew;
+import ThMod.potions.StarNLove;
 import ThMod.powers.Marisa.*;
+import ThMod.relics.ShroomBag;
 import basemod.BaseMod;
 import basemod.ReflectionHacks;
 import basemod.interfaces.PostInitializeSubscriber;
@@ -16,18 +18,26 @@ import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
 import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
-import marisastate.actions.ManaConvectionActionState;
-import marisastate.actions.MeteoricShowerActionState;
-import marisastate.actions.RefreshHandActionState;
-import marisastate.actions.ShootingEchoActionState;
+import com.megacrit.cardcrawl.helpers.PotionHelper;
+import marisastate.actions.*;
+import marisastate.cards.AmplifiedAttackCardState;
 import marisastate.powers.*;
+import marisastate.relic.ShroomBagState;
+import savestate.CardState;
 import savestate.SaveStateMod;
 import savestate.StateFactories;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
 import savestate.fastobjects.AnimationStateFast;
 import savestate.powers.PowerState;
+import savestate.relics.RelicState;
+
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Optional;
 
 @SpireInitializer
 public class MarisaState implements PostInitializeSubscriber {
@@ -42,9 +52,56 @@ public class MarisaState implements PostInitializeSubscriber {
         populatePowerFactory();
         populateActionsFactory();
         populateCurrentActionsFactory();
+        populateRelicFactory();
+        populateCardFactories();
 
         // stupid ID offset thing
         CardLibrary.cards.remove(PropBag.ID);
+
+        // Hangs on something, needs debugging
+        CardLibrary.cards.remove(BlazeAway.ID);
+        CardLibrary.cards.remove(MagicChant.ID);
+        CardLibrary.cards.remove(BinaryStars.ID);
+        CardLibrary.cards.remove(DeepEcologicalBomb.ID);
+        CardLibrary.cards.remove(TreasureHunter.ID);
+        CardLibrary.cards.remove(EarthLightRay.ID);
+        CardLibrary.cards.remove(Orbital.ID);
+        CardLibrary.cards.remove(EventHorizon.ID);
+        CardLibrary.cards.remove(BlazingStar.ID);
+
+        Iterator<String> actualPotions = PotionHelper.potions.iterator();
+        while (actualPotions.hasNext()) {
+            String potionId = actualPotions.next();
+            for (String toRemove : UNPLAYABLE_POTIONS) {
+                if (potionId.equals(toRemove)) {
+                    actualPotions.remove();
+                    continue;
+                }
+            }
+        }
+
+        ThMod.isDeadBranchEnabled = true;
+    }
+
+    private void populateCardFactories() {
+        CardState.CardFactories ampCardFactores = new CardState.CardFactories(card -> {
+            if (card instanceof AmplifiedAttack) {
+                return Optional.of(new AmplifiedAttackCardState(card));
+            }
+            return Optional.empty();
+        }, json -> {
+            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
+            String type = "";
+            if (parsed.has("type")) {
+                type = parsed.get("type").getAsString();
+            }
+            if (type.equals("AmplifiedAttack")) {
+                return Optional.of(new AmplifiedAttackCardState(json));
+            }
+            return Optional.empty();
+        });
+
+        StateFactories.cardFactories.add(ampCardFactores);
     }
 
     @SpirePatch(
@@ -117,7 +174,8 @@ public class MarisaState implements PostInitializeSubscriber {
                 .put(ManaConvectionAction.class, new CurrentActionState.CurrentActionFactories(action -> new ManaConvectionActionState(action)));
         StateFactories.currentActionByClassMap
                 .put(MeteoricShowerAction.class, new CurrentActionState.CurrentActionFactories(action -> new MeteoricShowerActionState(action)));
-
+        StateFactories.currentActionByClassMap
+                .put(MagicChantAction.class, new CurrentActionState.CurrentActionFactories(action -> new MagicChantActionState()));
     }
 
     private void populateActionsFactory() {
@@ -125,4 +183,17 @@ public class MarisaState implements PostInitializeSubscriber {
                 .put(RefreshHandAction.class, new ActionState.ActionFactories(action -> new RefreshHandActionState()));
 
     }
+
+    private void populateRelicFactory() {
+        StateFactories.relicByIdMap
+                .put(ShroomBag.ID, new RelicState.RelicFactories(relic -> new ShroomBagState(relic), json -> new ShroomBagState(json)));
+    }
+
+    public static HashSet<String> UNPLAYABLE_POTIONS = new HashSet<String>() {
+        {
+            this.add(BottledSpark.POTION_ID);
+            this.add(ShroomBrew.POTION_ID);
+            this.add(StarNLove.POTION_ID);
+        }
+    };
 }
