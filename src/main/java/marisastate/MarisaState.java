@@ -5,25 +5,29 @@ import ThMod.abstracts.AmplifiedAttack;
 import ThMod.action.*;
 import ThMod.cards.Marisa.*;
 import ThMod.characters.Marisa;
+import ThMod.monsters.Orin;
 import ThMod.potions.BottledSpark;
 import ThMod.potions.ShroomBrew;
 import ThMod.potions.StarNLove;
 import ThMod.powers.Marisa.*;
+import ThMod.powers.monsters.InfernoClaw;
+import ThMod.powers.monsters.WraithPower;
+import ThMod.relics.ExperimentalFamiliar;
 import ThMod.relics.ShroomBag;
 import basemod.BaseMod;
 import basemod.ReflectionHacks;
+import basemod.interfaces.EditRelicsSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
 import battleaimod.SilentLogger;
-import com.evacipated.cardcrawl.modthespire.lib.SpireInitializer;
-import com.evacipated.cardcrawl.modthespire.lib.SpireInsertPatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
-import com.evacipated.cardcrawl.modthespire.lib.SpireReturn;
+import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
+import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import marisastate.actions.*;
 import marisastate.cards.AmplifiedAttackCardState;
+import marisastate.monsters.OrinState;
 import marisastate.powers.*;
 import marisastate.relic.ShroomBagState;
 import savestate.CardState;
@@ -32,6 +36,7 @@ import savestate.StateFactories;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
 import savestate.fastobjects.AnimationStateFast;
+import savestate.monsters.MonsterState;
 import savestate.powers.PowerState;
 import savestate.relics.RelicState;
 
@@ -39,8 +44,10 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Optional;
 
+import static ThMod.patches.AbstractCardEnum.MARISA_COLOR;
+
 @SpireInitializer
-public class MarisaState implements PostInitializeSubscriber {
+public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscriber {
     public static void initialize() {
         BaseMod.subscribe(new MarisaState());
     }
@@ -54,6 +61,7 @@ public class MarisaState implements PostInitializeSubscriber {
         populateCurrentActionsFactory();
         populateRelicFactory();
         populateCardFactories();
+        populateMonsterFactories();
 
         // stupid ID offset thing
         CardLibrary.cards.remove(PropBag.ID);
@@ -69,6 +77,9 @@ public class MarisaState implements PostInitializeSubscriber {
         CardLibrary.cards.remove(EventHorizon.ID);
         CardLibrary.cards.remove(BlazingStar.ID);
 
+        // Custom Card State
+        CardLibrary.cards.remove(AbsoluteMagnitude.ID);
+
         Iterator<String> actualPotions = PotionHelper.potions.iterator();
         while (actualPotions.hasNext()) {
             String potionId = actualPotions.next();
@@ -81,27 +92,6 @@ public class MarisaState implements PostInitializeSubscriber {
         }
 
         ThMod.isDeadBranchEnabled = true;
-    }
-
-    private void populateCardFactories() {
-        CardState.CardFactories ampCardFactores = new CardState.CardFactories(card -> {
-            if (card instanceof AmplifiedAttack) {
-                return Optional.of(new AmplifiedAttackCardState(card));
-            }
-            return Optional.empty();
-        }, json -> {
-            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
-            String type = "";
-            if (parsed.has("type")) {
-                type = parsed.get("type").getAsString();
-            }
-            if (type.equals("AmplifiedAttack")) {
-                return Optional.of(new AmplifiedAttackCardState(json));
-            }
-            return Optional.empty();
-        });
-
-        StateFactories.cardFactories.add(ampCardFactores);
     }
 
     @SpirePatch(
@@ -140,6 +130,8 @@ public class MarisaState implements PostInitializeSubscriber {
         StateFactories.powerByIdMap
                 .put(GrandCrossPower.POWER_ID, new PowerState.PowerFactories(power -> new GrandCrossPowerState(power)));
         StateFactories.powerByIdMap
+                .put(InfernoClaw.POWER_ID, new PowerState.PowerFactories(power -> new InfernoClawState(power)));
+        StateFactories.powerByIdMap
                 .put(ManaRampagePower.POWER_ID, new PowerState.PowerFactories(power -> new ManaRampagePowerState(power)));
         StateFactories.powerByIdMap
                 .put(MillisecondPulsarsPower.POWER_ID, new PowerState.PowerFactories(power -> new MillisecondPulsarsPowerState(power)));
@@ -161,6 +153,8 @@ public class MarisaState implements PostInitializeSubscriber {
                 .put(SuperNovaPower.POWER_ID, new PowerState.PowerFactories(power -> new SuperNovaPowerState(power)));
         StateFactories.powerByIdMap
                 .put(TempStrengthLoss.POWER_ID, new PowerState.PowerFactories(power -> new TempStrengthLossState(power)));
+        StateFactories.powerByIdMap
+                .put(WraithPower.POWER_ID, new PowerState.PowerFactories(power -> new WraithPowerState(power)));
         StateFactories.powerByIdMap
                 .put(WitchOfGreedGold.POWER_ID, new PowerState.PowerFactories(power -> new WitchOfGreedGoldState(power)));
         StateFactories.powerByIdMap
@@ -196,4 +190,46 @@ public class MarisaState implements PostInitializeSubscriber {
             this.add(StarNLove.POTION_ID);
         }
     };
+
+
+    @SpirePatch(clz = PotionHelper.class, method = "initialize")
+    public static class NoCustomPotionsPatch {
+        @SpirePostfixPatch
+        public static void remove(AbstractPlayer.PlayerClass playerClass) {
+            System.err.println("potions " + PotionHelper.potions);
+            UNPLAYABLE_POTIONS.stream().forEach(potion -> PotionHelper.potions.remove(potion));
+        }
+    }
+
+    @Override
+    public void receiveEditRelics() {
+        BaseMod.removeRelicFromCustomPool(BaseMod
+                .getCustomRelic(ExperimentalFamiliar.ID), MARISA_COLOR);
+    }
+
+    private void populateCardFactories() {
+        CardState.CardFactories ampCardFactores = new CardState.CardFactories(card -> {
+            if (card instanceof AmplifiedAttack) {
+                return Optional.of(new AmplifiedAttackCardState(card));
+            }
+            return Optional.empty();
+        }, json -> {
+            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
+            String type = "";
+            if (parsed.has("type")) {
+                type = parsed.get("type").getAsString();
+            }
+            if (type.equals("AmplifiedAttack")) {
+                return Optional.of(new AmplifiedAttackCardState(json));
+            }
+            return Optional.empty();
+        });
+
+        StateFactories.cardFactories.add(ampCardFactores);
+    }
+
+    private void populateMonsterFactories() {
+        StateFactories.monsterByIdMap
+                .put(Orin.ID, new MonsterState.MonsterFactories(monster -> new OrinState(monster), json -> new OrinState(json)));
+    }
 }
