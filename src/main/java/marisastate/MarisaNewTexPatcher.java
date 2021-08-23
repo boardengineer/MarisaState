@@ -23,8 +23,6 @@ import java.util.ArrayList;
 )
 public class MarisaNewTexPatcher {
     public static void Raw(CtBehavior ctBehavior) throws NotFoundException, CannotCompileException {
-        System.out.println("Starting dynamic patch:");
-
         ClassFinder finder = new ClassFinder();
 
         finder.add(new File(Loader.STS_JAR));
@@ -47,12 +45,8 @@ public class MarisaNewTexPatcher {
         ArrayList<ClassInfo> foundClasses = new ArrayList<>();
         finder.findClasses(foundClasses, filter);
 
-        System.out.println("\t- Done Finding Classes.\n\t- Patching:");
-
         for (ClassInfo classInfo : foundClasses) {
             CtClass ctClass = ctBehavior.getDeclaringClass().getClassPool().get(classInfo.getClassName());
-
-            System.out.println("\t\t- Patching Class: " + ctClass.getSimpleName());
             try {
                 CtConstructor[] methods = ctClass.getConstructors();
                 for (CtConstructor m : methods) {
@@ -68,14 +62,10 @@ public class MarisaNewTexPatcher {
                         }
                     });
                 }
-
-                System.out.println("\t\t\tSuccess.\n");
             } catch (CannotCompileException e) {
-                System.out.println("\t\t\tFailure.\n");
                 e.printStackTrace();
             }
         }
-        System.out.println("\t- Done Patching.");
     }
 
     //TODO: Make blank texture
