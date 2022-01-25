@@ -1,16 +1,22 @@
 package marisastate.actions;
 
-import ThMod.action.MagicChantAction;
+import ThMod.action.BinaryStarsAction;
 import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import savestate.actions.CurrentActionState;
 
-public class MagicChantActionState implements CurrentActionState {
+public class BinaryStarActionState implements CurrentActionState {
+    private final boolean upgraded;
+
+    public BinaryStarActionState(AbstractGameAction action) {
+        upgraded = ReflectionHacks.getPrivate(action, BinaryStarsAction.class, "upg");
+    }
+
     @Override
     public AbstractGameAction loadCurrentAction() {
-        MagicChantAction result = new MagicChantAction();
+        BinaryStarsAction result = new BinaryStarsAction(upgraded);
 
         // This should make the action only trigger the second half of the update
         ReflectionHacks
@@ -20,14 +26,14 @@ public class MagicChantActionState implements CurrentActionState {
     }
 
     @SpirePatch(
-            clz = MagicChantAction.class,
+            clz = BinaryStarsAction.class,
             paramtypez = {},
             method = "update"
     )
     public static class HalfDoneActionPatch {
-        public static void Postfix(MagicChantAction _instance) {
+        public static void Postfix(BinaryStarsAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (AbstractDungeon.isScreenUp) {
+            if (!AbstractDungeon.handCardSelectScreen.wereCardsRetrieved && AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }

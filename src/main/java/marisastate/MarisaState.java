@@ -18,6 +18,7 @@ import basemod.BaseMod;
 import basemod.ReflectionHacks;
 import basemod.interfaces.EditRelicsSubscriber;
 import basemod.interfaces.PostInitializeSubscriber;
+import battleaimod.BattleAiMod;
 import battleaimod.SilentLogger;
 import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.google.gson.JsonObject;
@@ -63,19 +64,10 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         populateCardFactories();
         populateMonsterFactories();
 
+        BattleAiMod.cardRankMaps.add(MarisaPlayOrder.CARD_RANKS);
+
         // stupid ID offset thing
         CardLibrary.cards.remove(PropBag.ID);
-
-        // Hangs on something, needs debugging
-        CardLibrary.cards.remove(BlazeAway.ID);
-        CardLibrary.cards.remove(MagicChant.ID);
-        CardLibrary.cards.remove(BinaryStars.ID);
-        CardLibrary.cards.remove(DeepEcologicalBomb.ID);
-        CardLibrary.cards.remove(TreasureHunter.ID);
-        CardLibrary.cards.remove(EarthLightRay.ID);
-        CardLibrary.cards.remove(Orbital.ID);
-        CardLibrary.cards.remove(EventHorizon.ID);
-        CardLibrary.cards.remove(BlazingStar.ID);
 
         // Custom Card State
         CardLibrary.cards.remove(AbsoluteMagnitude.ID);
@@ -170,12 +162,21 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
                 .put(MeteoricShowerAction.class, new CurrentActionState.CurrentActionFactories(action -> new MeteoricShowerActionState(action)));
         StateFactories.currentActionByClassMap
                 .put(MagicChantAction.class, new CurrentActionState.CurrentActionFactories(action -> new MagicChantActionState()));
+        StateFactories.currentActionByClassMap
+                .put(BinaryStarsAction.class, new CurrentActionState.CurrentActionFactories(action -> new BinaryStarActionState(action)));
+        StateFactories.currentActionByClassMap
+                .put(BlackFlareStarAction.class, new CurrentActionState.CurrentActionFactories(action -> new BlackFlareStarActionState(action)));
+        StateFactories.currentActionByClassMap
+                .put(DiscardPileToHandAction.class, new CurrentActionState.CurrentActionFactories(action -> new DiscardPileToHandActionState(action)));
+        StateFactories.currentActionByClassMap
+                .put(OrbitalAction.class, new CurrentActionState.CurrentActionFactories(action -> new OrbitalActionState()));
+        StateFactories.currentActionByClassMap
+                .put(DiscToHandATKOnly.class, new CurrentActionState.CurrentActionFactories(action -> new DiscToHandATKOnlyState(action)));
     }
 
     private void populateActionsFactory() {
         StateFactories.actionByClassMap
                 .put(RefreshHandAction.class, new ActionState.ActionFactories(action -> new RefreshHandActionState()));
-
     }
 
     private void populateRelicFactory() {
