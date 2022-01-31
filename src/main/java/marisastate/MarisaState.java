@@ -4,7 +4,6 @@ import ThMod.ThMod;
 import ThMod.abstracts.AmplifiedAttack;
 import ThMod.action.*;
 import ThMod.cards.Marisa.AbsoluteMagnitude;
-import ThMod.cards.Marisa.PropBag;
 import ThMod.cards.derivations.WhiteDwarf;
 import ThMod.characters.Marisa;
 import ThMod.monsters.Orin;
@@ -26,9 +25,9 @@ import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
-import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import marisastate.actions.*;
+import marisastate.cards.AbsoluteMagnitudeState;
 import marisastate.cards.AmplifiedAttackCardState;
 import marisastate.cards.WhiteDwaftState;
 import marisastate.monsters.OrinState;
@@ -70,11 +69,10 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
 
         BattleAiMod.cardRankMaps.add(MarisaPlayOrder.CARD_RANKS);
 
-        // stupid ID offset thing
-        CardLibrary.cards.remove(PropBag.ID);
+        StateFactories.powerPrefixes.add(PropBagPower.POWER_ID);
 
         // Custom Card State
-        CardLibrary.cards.remove(AbsoluteMagnitude.ID);
+//        CardLibrary.cards.remove(AbsoluteMagnitude.ID);
 
         StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json));
         StateFactories.elementFactories.put(MarisaStateElement.ELEMENT_KEY, stateFactories);
@@ -161,6 +159,8 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
                 .put(WitchOfGreedGold.POWER_ID, new PowerState.PowerFactories(power -> new WitchOfGreedGoldState(power)));
         StateFactories.powerByIdMap
                 .put(WitchOfGreedPotion.POWER_ID, new PowerState.PowerFactories(power -> new WitchOfGreedPotionState(power)));
+        StateFactories.powerByIdMap
+                .put(PropBagPower.POWER_ID, new PowerState.PowerFactories(power -> new PropBagPowerState(power), json -> new PropBagPowerState(json)));
     }
 
     private void populateCurrentActionsFactory() {
@@ -249,12 +249,16 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         CardState.CardFactories whiteDwarfFactories = new CardState.CardFactories(card -> {
             if (card instanceof WhiteDwarf) {
                 return Optional.of(new WhiteDwaftState(card));
+            } else if (card instanceof AbsoluteMagnitude) {
+                return Optional.of(new AbsoluteMagnitudeState(card));
             }
             return Optional.empty();
         }, json -> {
             JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
-            if (parsed.get("card_id").equals(WhiteDwarf.ID)) {
+            if (parsed.get("card_id").getAsString().equals(WhiteDwarf.ID)) {
                 return Optional.of(new WhiteDwaftState(json));
+            } else if (parsed.get("card_id").getAsString().equals(AbsoluteMagnitude.ID)) {
+                return Optional.of(new AbsoluteMagnitudeState(json));
             }
             return Optional.empty();
         });

@@ -1,5 +1,6 @@
 C:\stuff\MarisaState\src\main\java\marisastate\powers\OrrerysSunPowerState.java
 C:\stuff\MarisaState\src\main\java\marisastate\actions\DrawDrawPileActionState.java
+C:\stuff\MarisaState\src\main\java\marisastate\cards\AbsoluteMagnitudeState.java
 C:\stuff\MarisaState\src\main\java\marisastate\actions\BinaryStarActionState.java
 C:\stuff\MarisaState\src\main\java\marisastate\MarisaNewTexPatcher.java
 C:\stuff\MarisaState\src\main\java\marisastate\powers\SatelIllusPowerState.java
@@ -34,6 +35,7 @@ C:\stuff\MarisaState\src\main\java\marisastate\powers\MillisecondPulsarsPowerSta
 C:\stuff\MarisaState\src\main\java\marisastate\powers\TempStrengthLossState.java
 C:\stuff\MarisaState\src\main\java\marisastate\MarisaState.java
 C:\stuff\MarisaState\src\main\java\marisastate\cards\WhiteDwaftState.java
+C:\stuff\MarisaState\src\main\java\marisastate\patches\PropBagPatches.java
 C:\stuff\MarisaState\src\main\java\marisastate\powers\PulseMagicPowerState.java
 C:\stuff\MarisaState\src\main\java\marisastate\powers\PropBagPowerState.java
 C:\stuff\MarisaState\src\main\java\marisastate\actions\FairyDestrucCullingActionState.java

@@ -1,6 +1,8 @@
 package marisastate;
 
 import ThMod.cards.Marisa.TreasureHunter;
+import ThMod.powers.Marisa.PropBagPower;
+import basemod.ReflectionHacks;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import marisastate.patches.TreasureHunterDamagePatch;
@@ -12,15 +14,20 @@ public class MarisaStateElement implements StateElement {
     public static String ELEMENT_KEY = "MARISA_MOD_STATE";
 
     public final int treasureHunterHitCount;
+    public final int propBagPowerStateIdOffset;
 
     public MarisaStateElement() {
         treasureHunterHitCount = TreasureHunterDamagePatch.UpdatePatch.hitCount;
+
+        propBagPowerStateIdOffset = ReflectionHacks
+                .getPrivateStatic(PropBagPower.class, "IdOffset");
     }
 
     public MarisaStateElement(String jsonState) {
         JsonObject parsed = new JsonParser().parse(jsonState).getAsJsonObject();
 
         treasureHunterHitCount = parsed.get("treasure_hunter_hit_count").getAsInt();
+        propBagPowerStateIdOffset = parsed.get("prop_bag_power_id_offset").getAsInt();
     }
 
     @Override
@@ -28,6 +35,7 @@ public class MarisaStateElement implements StateElement {
         JsonObject statJson = new JsonObject();
 
         statJson.addProperty("treasure_hunter_hit_count", treasureHunterHitCount);
+        statJson.addProperty("prop_bag_power_id_offset", propBagPowerStateIdOffset);
 
         return statJson.toString();
     }
@@ -35,6 +43,8 @@ public class MarisaStateElement implements StateElement {
     @Override
     public void restore() {
         TreasureHunterDamagePatch.UpdatePatch.hitCount = treasureHunterHitCount;
+
+        ReflectionHacks.setPrivateStatic(PropBagPower.class, "IdOffset", propBagPowerStateIdOffset);
     }
 
     public static int getElementScore(SaveState saveState) {

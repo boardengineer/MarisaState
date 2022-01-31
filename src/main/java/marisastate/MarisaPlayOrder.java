@@ -27,6 +27,7 @@ public class MarisaPlayOrder {
         put(OrrerysSun.ID, size++);
         put(OortCloud.ID, size++);
         put(SatelliteIllusion.ID, size++);
+        put(PropBag.ID, size++);
 
         // Big Booms
         put(MaximisePower.ID, size++);
@@ -57,6 +58,7 @@ public class MarisaPlayOrder {
         put(JA.ID, size++);
 
         // Attacks
+        put(AbsoluteMagnitude.ID, size++);
         put(_6A.ID, size++);
         put(WitchLeyline.ID, size++);
         put(TreasureHunter.ID, size++);
@@ -105,10 +107,6 @@ public class MarisaPlayOrder {
         put(GuidingStar.ID, size++);
         put(Orbital.ID, size++);
         put(SuperPerseids.ID, size++);
-
-        // Currently disabled
-        put(PropBag.ID, size++);
-        put(AbsoluteMagnitude.ID, size++);
 
         put(Strike_MRS.ID, size++);
         put(Defend_MRS.ID, size++);

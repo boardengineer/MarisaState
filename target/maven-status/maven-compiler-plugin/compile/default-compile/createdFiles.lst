@@ -20,6 +20,7 @@ marisastate\patches\SeededRngPatches$BlazeAwayActionSeedRngPatch.class
 marisastate\powers\EscapeVelocityPowerState.class
 marisastate\cards\AmplifiedAttackCardState.class
 marisastate\MarisaNewTexPatcher$1.class
+marisastate\patches\PropBagPatches$PropBagPowerPatch.class
 marisastate\MarisaState$1.class
 marisastate\powers\ChargeUpPowerState$NoAnimationsPatch.class
 marisastate\powers\ManaRampagePowerState.class
@@ -43,6 +44,7 @@ marisastate\powers\CasketOfStarPowerState.class
 marisastate\patches\SeededRngPatches$MakeShootTheMoonSeed.class
 marisastate\actions\DiscardPileToHandActionState.class
 marisastate\MarisaState.class
+marisastate\cards\AbsoluteMagnitudeState.class
 marisastate\patches\SeededRngPatches$DeepEcoloBombRngPatch.class
 marisastate\powers\MillisecondPulsarsPowerState.class
 marisastate\actions\MagicChantActionState$HalfDoneActionPatch.class
@@ -58,10 +60,12 @@ marisastate\MarisaNewTexPatcher.class
 marisastate\actions\OrbitalActionState$HalfDoneActionPatch.class
 marisastate\powers\OrrerysSunPowerState.class
 marisastate\actions\DiscardPileToHandActionState$HalfDoneActionPatch.class
+marisastate\patches\PropBagPatches.class
 marisastate\MarisaPlayOrder.class
 marisastate\powers\OneTimeOffPowerState.class
 marisastate\actions\BinaryStarActionState$HalfDoneActionPatch.class
 marisastate\actions\DiscToHandATKOnlyState$HalfDoneActionPatch.class
+marisastate\patches\PropBagPatches$PropBagActionPatch.class
 marisastate\actions\ShootingEchoActionState$NoDoubleExhaustActionPatch.class
 marisastate\actions\DiscToHandATKOnlyState.class
 marisastate\patches\TreasureHunterDamagePatch$UpdatePatch.class
