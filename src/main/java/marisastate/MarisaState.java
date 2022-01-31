@@ -3,7 +3,9 @@ package marisastate;
 import ThMod.ThMod;
 import ThMod.abstracts.AmplifiedAttack;
 import ThMod.action.*;
-import ThMod.cards.Marisa.*;
+import ThMod.cards.Marisa.AbsoluteMagnitude;
+import ThMod.cards.Marisa.PropBag;
+import ThMod.cards.derivations.WhiteDwarf;
 import ThMod.characters.Marisa;
 import ThMod.monsters.Orin;
 import ThMod.potions.BottledSpark;
@@ -28,11 +30,13 @@ import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import marisastate.actions.*;
 import marisastate.cards.AmplifiedAttackCardState;
+import marisastate.cards.WhiteDwaftState;
 import marisastate.monsters.OrinState;
 import marisastate.powers.*;
 import marisastate.relic.ShroomBagState;
 import savestate.CardState;
 import savestate.SaveStateMod;
+import savestate.StateElement;
 import savestate.StateFactories;
 import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
@@ -71,6 +75,12 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
 
         // Custom Card State
         CardLibrary.cards.remove(AbsoluteMagnitude.ID);
+
+        StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json));
+        StateFactories.elementFactories.put(MarisaStateElement.ELEMENT_KEY, stateFactories);
+
+        BattleAiMod.additionalValueFunctions
+                .add(saveState -> MarisaStateElement.getElementScore(saveState));
 
         Iterator<String> actualPotions = PotionHelper.potions.iterator();
         while (actualPotions.hasNext()) {
@@ -177,6 +187,16 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     private void populateActionsFactory() {
         StateFactories.actionByClassMap
                 .put(RefreshHandAction.class, new ActionState.ActionFactories(action -> new RefreshHandActionState()));
+        StateFactories.actionByClassMap
+                .put(WasteBombAction.class, new ActionState.ActionFactories(action -> new WasteBombActionState(action)));
+        StateFactories.actionByClassMap
+                .put(DrawDrawPileAction.class, new ActionState.ActionFactories(action -> new DrawDrawPileActionState()));
+        StateFactories.actionByClassMap
+                .put(RefractionSparkAction.class, new ActionState.ActionFactories(action -> new RefractionSparkActionState(action)));
+        StateFactories.actionByClassMap
+                .put(FairyDestrucCullingAction.class, new ActionState.ActionFactories(action -> new FairyDestrucCullingActionState(action)));
+        StateFactories.actionByClassMap
+                .put(RobberyDamageAction.class, new ActionState.ActionFactories(action -> new RobberyDamageActionState(action)));
     }
 
     private void populateRelicFactory() {
@@ -209,7 +229,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     }
 
     private void populateCardFactories() {
-        CardState.CardFactories ampCardFactores = new CardState.CardFactories(card -> {
+        CardState.CardFactories ampCardFactories = new CardState.CardFactories(card -> {
             if (card instanceof AmplifiedAttack) {
                 return Optional.of(new AmplifiedAttackCardState(card));
             }
@@ -226,7 +246,21 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
             return Optional.empty();
         });
 
-        StateFactories.cardFactories.add(ampCardFactores);
+        CardState.CardFactories whiteDwarfFactories = new CardState.CardFactories(card -> {
+            if (card instanceof WhiteDwarf) {
+                return Optional.of(new WhiteDwaftState(card));
+            }
+            return Optional.empty();
+        }, json -> {
+            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
+            if (parsed.get("card_id").equals(WhiteDwarf.ID)) {
+                return Optional.of(new WhiteDwaftState(json));
+            }
+            return Optional.empty();
+        });
+
+        StateFactories.cardFactories.add(whiteDwarfFactories);
+        StateFactories.cardFactories.add(ampCardFactories);
     }
 
     private void populateMonsterFactories() {

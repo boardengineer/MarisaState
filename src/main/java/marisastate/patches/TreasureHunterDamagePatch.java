@@ -19,7 +19,9 @@ public class TreasureHunterDamagePatch {
             clz = TreasureHunterDamageAction.class,
             method = "update"
     )
-    public static class NoMetricsReadingPatch {
+    public static class UpdatePatch {
+        public static int hitCount = 0;
+
         @SpirePrefixPatch
         public static SpireReturn update(TreasureHunterDamageAction action) {
 
@@ -59,6 +61,7 @@ public class TreasureHunterDamagePatch {
                 if (reward) {
                     if ((action.target.isDying || action.target.currentHealth <= 0) && !action.target.halfDead && !action.target
                             .hasPower("Minion")) {
+                        hitCount++;
                         AbstractDungeon.getCurrRoom().addRelicToRewards(tier);
                     }
                 }

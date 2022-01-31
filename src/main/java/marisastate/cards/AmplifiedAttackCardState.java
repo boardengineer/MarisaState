@@ -9,11 +9,13 @@ import savestate.CardState;
 
 public class AmplifiedAttackCardState extends CardState {
     private final int ampNumber;
+    private final boolean isException;
 
     public AmplifiedAttackCardState(AbstractCard card) {
         super(card);
 
         this.ampNumber = ReflectionHacks.getPrivate(card, AmplifiedAttack.class, "ampNumber");
+        this.isException = ReflectionHacks.getPrivate(card, AmplifiedAttack.class, "isException");
     }
 
     public AmplifiedAttackCardState(String json) {
@@ -22,6 +24,7 @@ public class AmplifiedAttackCardState extends CardState {
         JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
 
         this.ampNumber = parsed.get("amp_number").getAsInt();
+        this.isException = parsed.get("is_exception").getAsBoolean();
     }
 
     @Override
@@ -29,8 +32,7 @@ public class AmplifiedAttackCardState extends CardState {
         AbstractCard result = super.loadCard();
 
         ReflectionHacks.setPrivate(result, AmplifiedAttack.class, "ampNumber", ampNumber);
-
-
+        ReflectionHacks.setPrivate(result, AmplifiedAttack.class, "isException", isException);
 
         return result;
     }
@@ -42,6 +44,8 @@ public class AmplifiedAttackCardState extends CardState {
         JsonObject parsed = new JsonParser().parse(result).getAsJsonObject();
 
         parsed.addProperty("amp_number", ampNumber);
+        parsed.addProperty("is_exception", isException);
+
         parsed.addProperty("type", "AmplifiedAttack");
 
         return parsed.toString();

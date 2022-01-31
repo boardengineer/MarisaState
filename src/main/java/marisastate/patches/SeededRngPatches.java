@@ -28,7 +28,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 // The Marisa mod sets random monsters to AbstractDungeon.getMonsters().getRandomMonster(true)
-// which uses unseeded RNG. AbstractDungeon.getRandomMonster does
+// which uses unseeded RNG. AbstractDungeon.getRandomMonster() uses seeded RNG
 public class SeededRngPatches {
     @SpirePatch(
             clz = DamageRandomEnemyAction.class,
@@ -105,14 +105,16 @@ public class SeededRngPatches {
     )
     public static class DeepEcoloBombRngPatch {
         @SpirePrefixPatch
-        public static void setSeededRng(DeepEcologicalBomb card, AbstractPlayer player, AbstractMonster target) {
+        public static SpireReturn setSeededRng(DeepEcologicalBomb card, AbstractPlayer player, AbstractMonster target) {
             int num = 1;
             if (ThMod.Amplified(card, 1)) {
                 ++num;
             }
 
             AbstractDungeon.actionManager
-                    .addToBottom(new WasteBombAction(AbstractDungeon.getRandomMonster(), card.damage, num, card.magicNumber));
+                    .addToBottom(new WasteBombAction(AbstractDungeon
+                            .getRandomMonster(), card.damage, num, card.magicNumber));
+            return SpireReturn.Return(null);
         }
     }
 
@@ -185,7 +187,8 @@ public class SeededRngPatches {
                     if (num > 1 && !AbstractDungeon.getMonsters().areMonstersBasicallyDead()) {
                         --num;
                         AbstractDungeon.actionManager
-                                .addToTop(new WasteBombAction(AbstractDungeon.getRandomMonster(), damage, num, stacks));
+                                .addToTop(new WasteBombAction(AbstractDungeon
+                                        .getRandomMonster(), damage, num, stacks));
                     }
                 }
 
@@ -204,7 +207,6 @@ public class SeededRngPatches {
     public static class MakeShootTheMoonSeed {
         @SpirePrefixPatch
         public static SpireReturn<Void> replaceUser(ShootTheMoon card, AbstractPlayer p, AbstractMonster m) {
-            System.err.println("We're runing our own logic");
             boolean fightingBoss = m.type == AbstractMonster.EnemyType.BOSS;
             if (ThMod.Amplified(card, 1)) {
                 if (!fightingBoss) {

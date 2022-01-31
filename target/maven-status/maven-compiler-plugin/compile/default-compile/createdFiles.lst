@@ -10,6 +10,8 @@ marisastate\patches\SeededRngPatches$UnstableBombActionSeedRngPatch.class
 marisastate\powers\OneTimeOffPlusPowerState.class
 marisastate\MarisaPlayOrder$1.class
 marisastate\powers\PropBagPowerState.class
+marisastate\actions\WasteBombActionState.class
+marisastate\actions\RefractionSparkActionState.class
 marisastate\patches\SeededRngPatches$DamageRandomEnemyActionSeedRngPatch.class
 marisastate\powers\WitchOfGreedPotionState.class
 marisastate\patches\SeededRngPatches$PlayManaRampageCardActionSeedRngPatch.class
@@ -45,7 +47,11 @@ marisastate\patches\SeededRngPatches$DeepEcoloBombRngPatch.class
 marisastate\powers\MillisecondPulsarsPowerState.class
 marisastate\actions\MagicChantActionState$HalfDoneActionPatch.class
 marisastate\actions\BlackFlareStarActionState$HalfDoneActionPatch.class
+marisastate\actions\DrawDrawPileActionState.class
 marisastate\powers\MPPowerState.class
+marisastate\actions\FairyDestrucCullingActionState.class
+marisastate\MarisaStateElement.class
+marisastate\actions\RobberyDamageActionState.class
 marisastate\powers\InfernoClawState.class
 marisastate\actions\ShootingEchoActionState.class
 marisastate\MarisaNewTexPatcher.class
@@ -58,9 +64,10 @@ marisastate\actions\BinaryStarActionState$HalfDoneActionPatch.class
 marisastate\actions\DiscToHandATKOnlyState$HalfDoneActionPatch.class
 marisastate\actions\ShootingEchoActionState$NoDoubleExhaustActionPatch.class
 marisastate\actions\DiscToHandATKOnlyState.class
-marisastate\patches\TreasureHunterDamagePatch$NoMetricsReadingPatch.class
+marisastate\patches\TreasureHunterDamagePatch$UpdatePatch.class
 marisastate\actions\BlackFlareStarActionState.class
 marisastate\powers\SingularityPowerState.class
+marisastate\cards\WhiteDwaftState.class
 marisastate\patches\SeededRngPatches$WasteBombActionSeedRngPatch.class
 marisastate\powers\EventHorizonPowerState.class
 marisastate\powers\WitchOfGreedGoldState.class
