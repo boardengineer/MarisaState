@@ -71,9 +71,6 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
 
         StateFactories.powerPrefixes.add(PropBagPower.POWER_ID);
 
-        // Custom Card State
-//        CardLibrary.cards.remove(AbsoluteMagnitude.ID);
-
         StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json));
         StateFactories.elementFactories.put(MarisaStateElement.ELEMENT_KEY, stateFactories);
 
