@@ -2,8 +2,10 @@ package marisastate;
 
 import ThMod.cards.Marisa.*;
 import ThMod.cards.derivations.*;
+import com.megacrit.cardcrawl.cards.AbstractCard;
 import com.megacrit.cardcrawl.cards.curses.Pain;
 
+import java.util.Comparator;
 import java.util.HashMap;
 
 public class MarisaPlayOrder {
@@ -111,4 +113,13 @@ public class MarisaPlayOrder {
         put(Strike_MRS.ID, size++);
         put(Defend_MRS.ID, size++);
     }};
+
+    public static final Comparator<AbstractCard> COMPARATOR = (card1, card2) -> {
+        if (CARD_RANKS.containsKey(card1.cardID) && CARD_RANKS
+                .containsKey(card2.cardID)) {
+            return CARD_RANKS.get(card1.cardID) - CARD_RANKS
+                    .get(card2.cardID);
+        }
+        return 0;
+    };
 }

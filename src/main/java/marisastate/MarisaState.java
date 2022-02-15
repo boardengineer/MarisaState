@@ -67,7 +67,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         populateCardFactories();
         populateMonsterFactories();
 
-        BattleAiMod.cardRankMaps.add(MarisaPlayOrder.CARD_RANKS);
+        BattleAiMod.cardPlayHeuristics.add(MarisaPlayOrder.COMPARATOR);
 
         StateFactories.powerPrefixes.add(PropBagPower.POWER_ID);
 
