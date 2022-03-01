@@ -4,6 +4,7 @@ import ThMod.ThMod;
 import ThMod.abstracts.AmplifiedAttack;
 import ThMod.action.*;
 import ThMod.cards.Marisa.AbsoluteMagnitude;
+import ThMod.cards.Marisa.Orbital;
 import ThMod.cards.derivations.WhiteDwarf;
 import ThMod.characters.Marisa;
 import ThMod.monsters.Orin;
@@ -25,6 +26,7 @@ import com.evacipated.cardcrawl.modthespire.lib.*;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
+import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
 import marisastate.actions.*;
 import marisastate.cards.AbsoluteMagnitudeState;
@@ -70,6 +72,8 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         BattleAiMod.cardPlayHeuristics.add(MarisaPlayOrder.COMPARATOR);
 
         StateFactories.powerPrefixes.add(PropBagPower.POWER_ID);
+
+        CardLibrary.cards.remove(Orbital.ID);
 
         StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json));
         StateFactories.elementFactories.put(MarisaStateElement.ELEMENT_KEY, stateFactories);
