@@ -16,6 +16,8 @@ import com.megacrit.cardcrawl.core.Settings;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
 import com.megacrit.cardcrawl.powers.AbstractPower;
 import com.megacrit.cardcrawl.relics.*;
+import marisastate.MarisaNewTexPatcher;
+import savestate.SaveStateMod;
 
 import java.util.ArrayList;
 
@@ -35,7 +37,7 @@ public class PropBagPatches {
             ReflectionHacks.setPrivateStatic(PropBagPower.class, "IdOffset", IdOffset + 1);
             propBagPower.amount = -1;
             propBagPower.type = AbstractPower.PowerType.BUFF;
-            propBagPower.img = new Texture("img/powers/diminish.png");
+            propBagPower.img = SaveStateMod.shouldGoFast ? MarisaNewTexPatcher.tex : new Texture("img/powers/diminish.png");
 
             ReflectionHacks.setPrivate(propBagPower, PropBagPower.class, "r", r);
             ReflectionHacks
