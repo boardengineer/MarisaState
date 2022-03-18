@@ -39,7 +39,8 @@ public class MarisaNewTexPatcher {
 
         ClassFilter filter = new AndClassFilter(
                 new NotClassFilter(new InterfaceOnlyClassFilter()),
-                new ClassModifiersClassFilter(Modifier.PUBLIC)
+                new ClassModifiersClassFilter(Modifier.PUBLIC),
+                new RegexClassFilter("ThMod.*")
         );
 
         ArrayList<ClassInfo> foundClasses = new ArrayList<>();
