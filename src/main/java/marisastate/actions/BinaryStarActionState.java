@@ -39,4 +39,3 @@ public class BinaryStarActionState implements CurrentActionState {
         }
     }
 }
-w
