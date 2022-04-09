@@ -33,9 +33,10 @@ public class BinaryStarActionState implements CurrentActionState {
     public static class HalfDoneActionPatch {
         public static void Postfix(BinaryStarsAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (!AbstractDungeon.handCardSelectScreen.wereCardsRetrieved && AbstractDungeon.isScreenUp) {
+            if (AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }
     }
 }
+w
