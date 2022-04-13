@@ -115,7 +115,6 @@ public class PropBagPatches {
                 ThMod.logger.info("PropBagAction : No relic to give,returning");
                 action.isDone = true;
             } else {
-                AbstractRelic r;
                 if (relicPool.size() == 1) {
                     obtainProp(player, relicPool.get(0));
                     action.isDone = true;
@@ -136,6 +135,11 @@ public class PropBagPatches {
         AbstractDungeon.getCurrRoom()
                        .spawnRelicAndObtain((float) Settings.WIDTH / 2.0F, (float) Settings.HEIGHT / 2.0F, relic);
         relic.atBattleStart();
+
+        // Not sure why this is needed but doesn't seem to trigger
+        if (relic instanceof Sundial) {
+            relic.onEquip();
+        }
 
         AbstractDungeon.actionManager
                 .addToBottom(new ApplyPowerAction(player, player, new PropBagPower(player, relic)));
