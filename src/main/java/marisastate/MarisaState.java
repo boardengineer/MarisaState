@@ -232,10 +232,15 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     }
 
     private void populateCardFactories() {
-        CardState.CardFactories ampCardFactories = new CardState.CardFactories(card -> {
+        CardState.CardFactories allMarisaFactories = new CardState.CardFactories(card -> {
             if (card instanceof AmplifiedAttack) {
                 return Optional.of(new AmplifiedAttackCardState(card));
+            } else if (card instanceof WhiteDwarf) {
+                return Optional.of(new WhiteDwaftState(card));
+            } else if (card instanceof AbsoluteMagnitude) {
+                return Optional.of(new AbsoluteMagnitudeState(card));
             }
+
             return Optional.empty();
         }, json -> {
             JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
@@ -245,20 +250,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
             }
             if (type.equals("AmplifiedAttack")) {
                 return Optional.of(new AmplifiedAttackCardState(json));
-            }
-            return Optional.empty();
-        });
-
-        CardState.CardFactories whiteDwarfFactories = new CardState.CardFactories(card -> {
-            if (card instanceof WhiteDwarf) {
-                return Optional.of(new WhiteDwaftState(card));
-            } else if (card instanceof AbsoluteMagnitude) {
-                return Optional.of(new AbsoluteMagnitudeState(card));
-            }
-            return Optional.empty();
-        }, json -> {
-            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
-            if (parsed.get("card_id").getAsString().equals(WhiteDwarf.ID)) {
+            } else if (parsed.get("card_id").getAsString().equals(WhiteDwarf.ID)) {
                 return Optional.of(new WhiteDwaftState(json));
             } else if (parsed.get("card_id").getAsString().equals(AbsoluteMagnitude.ID)) {
                 return Optional.of(new AbsoluteMagnitudeState(json));
@@ -266,8 +258,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
             return Optional.empty();
         });
 
-        StateFactories.cardFactories.add(whiteDwarfFactories);
-        StateFactories.cardFactories.add(ampCardFactories);
+        StateFactories.cardFactories.add(allMarisaFactories);
     }
 
     private void populateMonsterFactories() {
