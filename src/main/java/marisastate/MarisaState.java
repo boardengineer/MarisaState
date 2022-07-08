@@ -23,8 +23,6 @@ import basemod.interfaces.PostInitializeSubscriber;
 import battleaimod.BattleAiMod;
 import battleaimod.SilentLogger;
 import com.evacipated.cardcrawl.modthespire.lib.*;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
 import com.megacrit.cardcrawl.characters.AbstractPlayer;
 import com.megacrit.cardcrawl.helpers.CardLibrary;
 import com.megacrit.cardcrawl.helpers.PotionHelper;
@@ -48,7 +46,6 @@ import savestate.relics.RelicState;
 
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Optional;
 
 import static ThMod.patches.AbstractCardEnum.MARISA_COLOR;
 
@@ -232,33 +229,20 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     }
 
     private void populateCardFactories() {
-        CardState.CardFactories allMarisaFactories = new CardState.CardFactories(card -> {
-            if (card instanceof AmplifiedAttack) {
-                return Optional.of(new AmplifiedAttackCardState(card));
-            } else if (card instanceof WhiteDwarf) {
-                return Optional.of(new WhiteDwaftState(card));
-            } else if (card instanceof AbsoluteMagnitude) {
-                return Optional.of(new AbsoluteMagnitudeState(card));
-            }
+        StateFactories.cardFactoriesByType
+                .put(WhiteDwarf.class, new CardState.CardFactories(card -> new WhiteDwaftState(card), json -> new WhiteDwaftState(json)));
+        StateFactories.cardFactoriesByCardId
+                .put(WhiteDwarf.ID, new CardState.CardFactories(card -> new WhiteDwaftState(card), json -> new WhiteDwaftState(json)));
 
-            return Optional.empty();
-        }, json -> {
-            JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
-            String type = "";
-            if (parsed.has("type")) {
-                type = parsed.get("type").getAsString();
-            }
-            if (type.equals("AmplifiedAttack")) {
-                return Optional.of(new AmplifiedAttackCardState(json));
-            } else if (parsed.get("card_id").getAsString().equals(WhiteDwarf.ID)) {
-                return Optional.of(new WhiteDwaftState(json));
-            } else if (parsed.get("card_id").getAsString().equals(AbsoluteMagnitude.ID)) {
-                return Optional.of(new AbsoluteMagnitudeState(json));
-            }
-            return Optional.empty();
-        });
+        StateFactories.cardFactoriesByType
+                .put(AbsoluteMagnitude.class, new CardState.CardFactories(card -> new AbsoluteMagnitudeState(card), json -> new AbsoluteMagnitudeState(json)));
+        StateFactories.cardFactoriesByCardId
+                .put(AbsoluteMagnitude.ID, new CardState.CardFactories(card -> new AbsoluteMagnitudeState(card), json -> new AbsoluteMagnitudeState(json)));
 
-        StateFactories.cardFactories.add(allMarisaFactories);
+        StateFactories.cardFactoriesByType
+                .put(AmplifiedAttack.class, new CardState.CardFactories(card -> new AmplifiedAttackCardState(card), json -> new AmplifiedAttackCardState(json)));
+        StateFactories.cardFactoriesByTypeName
+                .put(AmplifiedAttackCardState.TYPE_KEY, new CardState.CardFactories(card -> new AmplifiedAttackCardState(card), json -> new AmplifiedAttackCardState(json)));
     }
 
     private void populateMonsterFactories() {

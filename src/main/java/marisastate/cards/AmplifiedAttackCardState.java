@@ -8,6 +8,8 @@ import com.megacrit.cardcrawl.cards.AbstractCard;
 import savestate.CardState;
 
 public class AmplifiedAttackCardState extends CardState {
+    public static final String TYPE_KEY = "AmplifiedAttack";
+
     private final int ampNumber;
     private final boolean isException;
 
@@ -46,7 +48,7 @@ public class AmplifiedAttackCardState extends CardState {
         parsed.addProperty("amp_number", ampNumber);
         parsed.addProperty("is_exception", isException);
 
-        parsed.addProperty("type", "AmplifiedAttack");
+        parsed.addProperty("type", TYPE_KEY);
 
         return parsed.toString();
     }
