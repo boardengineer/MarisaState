@@ -9,6 +9,7 @@ import marisastate.patches.TreasureHunterDamagePatch;
 import savestate.CardState;
 import savestate.SaveState;
 import savestate.StateElement;
+import savestate.StateFactories;
 
 public class MarisaStateElement implements StateElement {
     public static String ELEMENT_KEY = "MARISA_MOD_STATE";
@@ -53,7 +54,7 @@ public class MarisaStateElement implements StateElement {
 
         int treasureHunterCardCount = 0;
         for (CardState card : saveState.playerState.hand) {
-            switch (card.cardId) {
+            switch (StateFactories.cardIds[card.cardIdIndex]) {
                 case TreasureHunter.ID:
                     treasureHunterCardCount++;
                     break;
@@ -63,7 +64,7 @@ public class MarisaStateElement implements StateElement {
         }
 
         for (CardState card : saveState.playerState.drawPile) {
-            switch (card.cardId) {
+            switch (StateFactories.cardIds[card.cardIdIndex]) {
                 case TreasureHunter.ID:
                     treasureHunterCardCount++;
                     break;
@@ -73,7 +74,7 @@ public class MarisaStateElement implements StateElement {
         }
 
         for (CardState card : saveState.playerState.discardPile) {
-            switch (card.cardId) {
+            switch (StateFactories.cardIds[card.cardIdIndex]) {
                 case TreasureHunter.ID:
                     treasureHunterCardCount++;
                     break;

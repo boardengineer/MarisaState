@@ -217,7 +217,6 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     public static class NoCustomPotionsPatch {
         @SpirePostfixPatch
         public static void remove(AbstractPlayer.PlayerClass playerClass) {
-            System.err.println("potions " + PotionHelper.potions);
             UNPLAYABLE_POTIONS.stream().forEach(potion -> PotionHelper.potions.remove(potion));
         }
     }
