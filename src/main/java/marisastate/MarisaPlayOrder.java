@@ -3,7 +3,10 @@ package marisastate;
 import ThMod.cards.Marisa.*;
 import ThMod.cards.derivations.*;
 import com.megacrit.cardcrawl.cards.AbstractCard;
-import com.megacrit.cardcrawl.cards.curses.Pain;
+import com.megacrit.cardcrawl.cards.curses.*;
+import com.megacrit.cardcrawl.cards.status.Burn;
+import com.megacrit.cardcrawl.cards.status.Dazed;
+import com.megacrit.cardcrawl.cards.status.Wound;
 
 import java.util.Comparator;
 import java.util.HashMap;
@@ -30,6 +33,16 @@ public class MarisaPlayOrder {
         put(OortCloud.ID, size++);
         put(SatelliteIllusion.ID, size++);
         put(PropBag.ID, size++);
+
+        put(Wound.ID, size++);
+        put(Burn.ID, size++);
+        put(Dazed.ID, size++);
+        put(Pain.ID, size++);
+        put(Doubt.ID, size++);
+        put(Normality.ID, size++);
+        put(Shame.ID, size++);
+        put(AscendersBane.ID, size++);
+        put(CurseOfTheBell.ID, size++);
 
         // Big Booms
         put(MaximisePower.ID, size++);

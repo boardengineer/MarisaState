@@ -190,6 +190,8 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         StateFactories.actionByClassMap
                 .put(DiscToHandRandAction.class, new ActionState.ActionFactories(action -> new DiscToHandRandActionState()));
         StateFactories.actionByClassMap
+                .put(DiscardPileToHandAction.class, new ActionState.ActionFactories(action -> new DiscardPileToHandActionState(action)));
+        StateFactories.actionByClassMap
                 .put(DrawDrawPileAction.class, new ActionState.ActionFactories(action -> new DrawDrawPileActionState()));
         StateFactories.actionByClassMap
                 .put(RefractionSparkAction.class, new ActionState.ActionFactories(action -> new RefractionSparkActionState(action)));

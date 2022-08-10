@@ -5,9 +5,10 @@ import basemod.ReflectionHacks;
 import com.evacipated.cardcrawl.modthespire.lib.SpirePatch;
 import com.megacrit.cardcrawl.actions.AbstractGameAction;
 import com.megacrit.cardcrawl.dungeons.AbstractDungeon;
+import savestate.actions.ActionState;
 import savestate.actions.CurrentActionState;
 
-public class DiscardPileToHandActionState implements CurrentActionState {
+public class DiscardPileToHandActionState implements CurrentActionState, ActionState {
     private final int amount;
 
     public DiscardPileToHandActionState(AbstractGameAction action) {
@@ -37,5 +38,10 @@ public class DiscardPileToHandActionState implements CurrentActionState {
                 _instance.isDone = false;
             }
         }
+    }
+
+    @Override
+    public AbstractGameAction loadAction() {
+        return new DiscardPileToHandAction(amount);
     }
 }
