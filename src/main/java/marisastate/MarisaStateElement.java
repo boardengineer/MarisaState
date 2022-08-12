@@ -31,6 +31,11 @@ public class MarisaStateElement implements StateElement {
         propBagPowerStateIdOffset = parsed.get("prop_bag_power_id_offset").getAsInt();
     }
 
+    public MarisaStateElement(JsonObject elementJson) {
+        treasureHunterHitCount = elementJson.get("treasure_hunter_hit_count").getAsInt();
+        propBagPowerStateIdOffset = elementJson.get("prop_bag_power_id_offset").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject statJson = new JsonObject();
@@ -39,6 +44,16 @@ public class MarisaStateElement implements StateElement {
         statJson.addProperty("prop_bag_power_id_offset", propBagPowerStateIdOffset);
 
         return statJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject statJson = new JsonObject();
+
+        statJson.addProperty("treasure_hunter_hit_count", treasureHunterHitCount);
+        statJson.addProperty("prop_bag_power_id_offset", propBagPowerStateIdOffset);
+
+        return statJson;
     }
 
     @Override

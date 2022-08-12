@@ -39,6 +39,12 @@ public class PropBagPowerState extends PowerState {
         this.relicIndex = parsed.get("relic_index").getAsInt();
     }
 
+    public PropBagPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.relicIndex = powerJson.get("relic_index").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -46,6 +52,15 @@ public class PropBagPowerState extends PowerState {
         parsed.addProperty("relic_index", relicIndex);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("relic_index", relicIndex);
+
+        return result;
     }
 
     @Override

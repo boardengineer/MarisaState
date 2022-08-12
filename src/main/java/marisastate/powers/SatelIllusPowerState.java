@@ -25,6 +25,12 @@ public class SatelIllusPowerState extends PowerState {
         this.counter = parsed.get("counter").getAsInt();
     }
 
+    public SatelIllusPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.counter = powerJson.get("counter").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -32,6 +38,13 @@ public class SatelIllusPowerState extends PowerState {
         parsed.addProperty("counter", counter);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        return result;
     }
 
     @Override

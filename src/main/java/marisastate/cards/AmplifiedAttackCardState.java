@@ -29,6 +29,13 @@ public class AmplifiedAttackCardState extends CardState {
         this.isException = parsed.get("is_exception").getAsBoolean();
     }
 
+    public AmplifiedAttackCardState(JsonObject cardJson) {
+        super(cardJson);
+
+        this.ampNumber = cardJson.get("amp_number").getAsInt();
+        this.isException = cardJson.get("is_exception").getAsBoolean();
+    }
+
     @Override
     public AbstractCard loadCard() {
         AbstractCard result = super.loadCard();
@@ -51,5 +58,17 @@ public class AmplifiedAttackCardState extends CardState {
         parsed.addProperty("type", TYPE_KEY);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("amp_number", ampNumber);
+        result.addProperty("is_exception", isException);
+
+        result.addProperty("type", TYPE_KEY);
+
+        return result;
     }
 }

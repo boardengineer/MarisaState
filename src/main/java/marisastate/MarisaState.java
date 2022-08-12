@@ -72,7 +72,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
 
         CardLibrary.cards.remove(Orbital.ID);
 
-        StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json));
+        StateElement.ElementFactories stateFactories = new StateElement.ElementFactories(() -> new MarisaStateElement(), json -> new MarisaStateElement(json), jsonObject -> new MarisaStateElement(jsonObject));
         StateFactories.elementFactories.put(MarisaStateElement.ELEMENT_KEY, stateFactories);
 
         BattleAiMod.additionalValueFunctions
@@ -109,6 +109,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     }
 
     private void populatePowerFactory() {
+
         StateFactories.powerByIdMap
                 .put(BlazeAwayPower.POWER_ID, new PowerState.PowerFactories(power -> new BlazeAwayPowerState(power)));
         StateFactories.powerByIdMap
@@ -116,7 +117,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         StateFactories.powerByIdMap
                 .put(CasketOfStarPower.POWER_ID, new PowerState.PowerFactories(power -> new CasketOfStarPowerState(power)));
         StateFactories.powerByIdMap
-                .put(ChargeUpPower.POWER_ID, new PowerState.PowerFactories(power -> new ChargeUpPowerState(power), json -> new ChargeUpPowerState(json)));
+                .put(ChargeUpPower.POWER_ID, new PowerState.PowerFactories(power -> new ChargeUpPowerState(power), json -> new ChargeUpPowerState(json), jsonObject -> new ChargeUpPowerState(jsonObject)));
         StateFactories.powerByIdMap
                 .put(DarkMatterPower.POWER_ID, new PowerState.PowerFactories(power -> new DarkMatterPowerState(power)));
         StateFactories.powerByIdMap
@@ -144,7 +145,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         StateFactories.powerByIdMap
                 .put(PulseMagicPower.POWER_ID, new PowerState.PowerFactories(power -> new PulseMagicPowerState(power)));
         StateFactories.powerByIdMap
-                .put(SatelIllusPower.POWER_ID, new PowerState.PowerFactories(power -> new SatelIllusPowerState(power), json -> new SatelIllusPowerState(json)));
+                .put(SatelIllusPower.POWER_ID, new PowerState.PowerFactories(power -> new SatelIllusPowerState(power), json -> new SatelIllusPowerState(json), jsonObject -> new SatelIllusPowerState(jsonObject)));
         StateFactories.powerByIdMap
                 .put(SingularityPower.POWER_ID, new PowerState.PowerFactories(power -> new SingularityPowerState(power)));
         StateFactories.powerByIdMap
@@ -158,7 +159,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
         StateFactories.powerByIdMap
                 .put(WitchOfGreedPotion.POWER_ID, new PowerState.PowerFactories(power -> new WitchOfGreedPotionState(power)));
         StateFactories.powerByIdMap
-                .put(PropBagPower.POWER_ID, new PowerState.PowerFactories(power -> new PropBagPowerState(power), json -> new PropBagPowerState(json)));
+                .put(PropBagPower.POWER_ID, new PowerState.PowerFactories(power -> new PropBagPowerState(power), json -> new PropBagPowerState(json), jsonObject -> new PropBagPowerState(jsonObject)));
     }
 
     private void populateCurrentActionsFactory() {
@@ -203,7 +204,7 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
 
     private void populateRelicFactory() {
         StateFactories.relicByIdMap
-                .put(ShroomBag.ID, new RelicState.RelicFactories(relic -> new ShroomBagState(relic), json -> new ShroomBagState(json)));
+                .put(ShroomBag.ID, new RelicState.RelicFactories(relic -> new ShroomBagState(relic), json -> new ShroomBagState(json), jsonObject -> new ShroomBagState(jsonObject)));
     }
 
     public static HashSet<String> UNPLAYABLE_POTIONS = new HashSet<String>() {
@@ -230,24 +231,25 @@ public class MarisaState implements PostInitializeSubscriber, EditRelicsSubscrib
     }
 
     private void populateCardFactories() {
-        StateFactories.cardFactoriesByType
-                .put(WhiteDwarf.class, new CardState.CardFactories(card -> new WhiteDwaftState(card), json -> new WhiteDwaftState(json)));
-        StateFactories.cardFactoriesByCardId
-                .put(WhiteDwarf.ID, new CardState.CardFactories(card -> new WhiteDwaftState(card), json -> new WhiteDwaftState(json)));
+        CardState.CardFactories whiteDwarfFactories = new CardState.CardFactories(card -> new WhiteDwaftState(card), json -> new WhiteDwaftState(json), jsonObject -> new WhiteDwaftState(jsonObject));
 
-        StateFactories.cardFactoriesByType
-                .put(AbsoluteMagnitude.class, new CardState.CardFactories(card -> new AbsoluteMagnitudeState(card), json -> new AbsoluteMagnitudeState(json)));
-        StateFactories.cardFactoriesByCardId
-                .put(AbsoluteMagnitude.ID, new CardState.CardFactories(card -> new AbsoluteMagnitudeState(card), json -> new AbsoluteMagnitudeState(json)));
+        StateFactories.cardFactoriesByType.put(WhiteDwarf.class, whiteDwarfFactories);
+        StateFactories.cardFactoriesByCardId.put(WhiteDwarf.ID, whiteDwarfFactories);
 
-        StateFactories.cardFactoriesByType
-                .put(AmplifiedAttack.class, new CardState.CardFactories(card -> new AmplifiedAttackCardState(card), json -> new AmplifiedAttackCardState(json)));
+        CardState.CardFactories absoluteMagnitudeFactories = new CardState.CardFactories(card -> new AbsoluteMagnitudeState(card), json -> new AbsoluteMagnitudeState(json), jsonObject -> new AbsoluteMagnitudeState(jsonObject));
+
+        StateFactories.cardFactoriesByType.put(AbsoluteMagnitude.class, absoluteMagnitudeFactories);
+        StateFactories.cardFactoriesByCardId.put(AbsoluteMagnitude.ID, absoluteMagnitudeFactories);
+
+        CardState.CardFactories ampCardFactories = new CardState.CardFactories(card -> new AmplifiedAttackCardState(card), json -> new AmplifiedAttackCardState(json), jsonObject -> new AmplifiedAttackCardState(jsonObject));
+
+        StateFactories.cardFactoriesByType.put(AmplifiedAttack.class, ampCardFactories);
         StateFactories.cardFactoriesByTypeName
-                .put(AmplifiedAttackCardState.TYPE_KEY, new CardState.CardFactories(card -> new AmplifiedAttackCardState(card), json -> new AmplifiedAttackCardState(json)));
+                .put(AmplifiedAttackCardState.TYPE_KEY, ampCardFactories);
     }
 
     private void populateMonsterFactories() {
         StateFactories.monsterByIdMap
-                .put(Orin.ID, new MonsterState.MonsterFactories(monster -> new OrinState(monster), json -> new OrinState(json)));
+                .put(Orin.ID, new MonsterState.MonsterFactories(monster -> new OrinState(monster), json -> new OrinState(json), jsonObject -> new OrinState(jsonObject)));
     }
 }

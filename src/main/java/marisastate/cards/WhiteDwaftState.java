@@ -22,6 +22,12 @@ public class WhiteDwaftState extends AmplifiedAttackCardState {
         magn = parsed.get("magn").getAsFloat();
     }
 
+    public WhiteDwaftState(JsonObject cardJson) {
+        super(cardJson);
+
+        magn = cardJson.get("magn").getAsFloat();
+    }
+
     @Override
     public AbstractCard loadCard() {
         AbstractCard result = super.loadCard();
@@ -40,5 +46,14 @@ public class WhiteDwaftState extends AmplifiedAttackCardState {
         parsed.addProperty("magn", magn);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("magn", magn);
+
+        return result;
     }
 }

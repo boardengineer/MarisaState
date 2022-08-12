@@ -59,6 +59,22 @@ public class OrinState extends MonsterState {
         this.turnCount = parsed.get("turn_count").getAsInt();
     }
 
+    public OrinState(JsonObject monsterJson) {
+        super(monsterJson);
+
+        this.doubleTap = monsterJson.get("double_tap").getAsInt();
+        this.catTap = monsterJson.get("cat_tap").getAsInt();
+        this.hellFireDmg = monsterJson.get("hell_fire_dmg").getAsInt();
+        this.strength = monsterJson.get("strength").getAsInt();
+        this.weak = monsterJson.get("weak").getAsInt();
+        this.wraith = monsterJson.get("wraith").getAsInt();
+        this.exc = monsterJson.get("exc").getAsInt();
+        this.executeDmg = monsterJson.get("execut_dmg").getAsInt();
+        this.quad = monsterJson.get("quad").getAsInt();
+        this.blc = monsterJson.get("blc").getAsInt();
+        this.turnCount = monsterJson.get("turn_count").getAsInt();
+    }
+
     @Override
     public AbstractMonster loadMonster() {
         Orin result = new Orin();
@@ -95,6 +111,25 @@ public class OrinState extends MonsterState {
         monsterStateJson.addProperty("turn_count", turnCount);
 
         return monsterStateJson.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("double_tap", doubleTap);
+        result.addProperty("cat_tap", catTap);
+        result.addProperty("hell_fire_dmg", hellFireDmg);
+        result.addProperty("strength", strength);
+        result.addProperty("weak", weak);
+        result.addProperty("wraith", wraith);
+        result.addProperty("exc", exc);
+        result.addProperty("execut_dmg", executeDmg);
+        result.addProperty("quad", quad);
+        result.addProperty("blc", blc);
+        result.addProperty("turn_count", turnCount);
+
+        return result;
     }
 
     @SpirePatch(

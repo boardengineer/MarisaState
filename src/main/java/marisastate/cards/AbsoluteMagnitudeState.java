@@ -25,6 +25,12 @@ public class AbsoluteMagnitudeState extends AmplifiedAttackCardState {
         multiplier = parsed.get("multiplier").getAsFloat();
     }
 
+    public AbsoluteMagnitudeState(JsonObject cardJson) {
+        super(cardJson);
+
+        multiplier = cardJson.get("multiplier").getAsFloat();
+    }
+
     @Override
     public AbstractCard loadCard() {
         AbstractCard result = super.loadCard();
@@ -42,5 +48,14 @@ public class AbsoluteMagnitudeState extends AmplifiedAttackCardState {
         parsed.addProperty("multiplier", multiplier);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("multiplier", multiplier);
+
+        return result;
     }
 }

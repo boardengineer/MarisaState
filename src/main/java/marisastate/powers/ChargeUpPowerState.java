@@ -33,6 +33,13 @@ public class ChargeUpPowerState extends PowerState {
         this.stc = parsed.get("stc").getAsInt();
     }
 
+    public ChargeUpPowerState(JsonObject powerJson) {
+        super(powerJson);
+
+        this.cnt = powerJson.get("cnt").getAsInt();
+        this.stc = powerJson.get("stc").getAsInt();
+    }
+
     @Override
     public String encode() {
         JsonObject parsed = new JsonParser().parse(super.encode()).getAsJsonObject();
@@ -41,6 +48,16 @@ public class ChargeUpPowerState extends PowerState {
         parsed.addProperty("stc", stc);
 
         return parsed.toString();
+    }
+
+    @Override
+    public JsonObject jsonEncode() {
+        JsonObject result = super.jsonEncode();
+
+        result.addProperty("cnt", cnt);
+        result.addProperty("stc", stc);
+
+        return result;
     }
 
     @Override
