@@ -20,8 +20,6 @@ public class AbsoluteMagnitudeState extends AmplifiedAttackCardState {
 
         JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
 
-        System.err.println("unparsed multiplier " + parsed.get("multiplier").getAsString());
-
         multiplier = parsed.get("multiplier").getAsFloat();
     }
 

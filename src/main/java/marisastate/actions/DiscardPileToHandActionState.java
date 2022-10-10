@@ -34,7 +34,7 @@ public class DiscardPileToHandActionState implements CurrentActionState, ActionS
     public static class HalfDoneActionPatch {
         public static void Postfix(DiscardPileToHandAction _instance) {
             // Force the action to stay in the the manager until cards are selected
-            if (!AbstractDungeon.handCardSelectScreen.wereCardsRetrieved && AbstractDungeon.isScreenUp) {
+            if (AbstractDungeon.screen == AbstractDungeon.CurrentScreen.GRID && AbstractDungeon.isScreenUp) {
                 _instance.isDone = false;
             }
         }
