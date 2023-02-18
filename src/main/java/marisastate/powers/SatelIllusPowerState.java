@@ -44,6 +44,8 @@ public class SatelIllusPowerState extends PowerState {
     public JsonObject jsonEncode() {
         JsonObject result = super.jsonEncode();
 
+        result.addProperty("counter", counter);
+
         return result;
     }
 
