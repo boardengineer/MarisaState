@@ -11,6 +11,7 @@ public class AmplifiedAttackCardState extends CardState {
     public static final String TYPE_KEY = "AmplifiedAttack";
 
     private final int ampNumber;
+    private final int ampDamage;
     private final boolean isException;
 
     public AmplifiedAttackCardState(AbstractCard card) {
@@ -18,6 +19,7 @@ public class AmplifiedAttackCardState extends CardState {
 
         this.ampNumber = ReflectionHacks.getPrivate(card, AmplifiedAttack.class, "ampNumber");
         this.isException = ReflectionHacks.getPrivate(card, AmplifiedAttack.class, "isException");
+        this.ampDamage = ReflectionHacks.getPrivate(card, AmplifiedAttack.class, "ampDamage");
     }
 
     public AmplifiedAttackCardState(String json) {
@@ -26,6 +28,7 @@ public class AmplifiedAttackCardState extends CardState {
         JsonObject parsed = new JsonParser().parse(json).getAsJsonObject();
 
         this.ampNumber = parsed.get("amp_number").getAsInt();
+        this.ampDamage = parsed.get("amp_damage").getAsInt();
         this.isException = parsed.get("is_exception").getAsBoolean();
     }
 
@@ -33,6 +36,7 @@ public class AmplifiedAttackCardState extends CardState {
         super(cardJson);
 
         this.ampNumber = cardJson.get("amp_number").getAsInt();
+        this.ampDamage = cardJson.get("amp_damage").getAsInt();
         this.isException = cardJson.get("is_exception").getAsBoolean();
     }
 
@@ -41,6 +45,7 @@ public class AmplifiedAttackCardState extends CardState {
         AbstractCard result = super.loadCard();
 
         ReflectionHacks.setPrivate(result, AmplifiedAttack.class, "ampNumber", ampNumber);
+        ReflectionHacks.setPrivate(result, AmplifiedAttack.class, "ampDamage", ampDamage);
         ReflectionHacks.setPrivate(result, AmplifiedAttack.class, "isException", isException);
 
         return result;
@@ -53,6 +58,7 @@ public class AmplifiedAttackCardState extends CardState {
         JsonObject parsed = new JsonParser().parse(result).getAsJsonObject();
 
         parsed.addProperty("amp_number", ampNumber);
+        parsed.addProperty("amp_damage", ampDamage);
         parsed.addProperty("is_exception", isException);
 
         parsed.addProperty("type", TYPE_KEY);
@@ -65,6 +71,7 @@ public class AmplifiedAttackCardState extends CardState {
         JsonObject result = super.jsonEncode();
 
         result.addProperty("amp_number", ampNumber);
+        result.addProperty("amp_damage", ampDamage);
         result.addProperty("is_exception", isException);
 
         result.addProperty("type", TYPE_KEY);
